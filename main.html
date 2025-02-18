@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Bitcoin Network Visualization</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script>
+        // Get the canvas element
+        var canvas = document.getElementById("renderCanvas");
+
+        // Create Babylon.js engine
+        var engine = new BABYLON.Engine(canvas, true);
+
+        // Create a scene
+        var createScene = function () {
+            var scene = new BABYLON.Scene(engine);
+
+            // Create camera and set its position
+            var camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 4, 4, BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
+
+            // Create lights
+            // var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
+            // var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
+            
+            
+            // Create shiny string light
+            const stringLight = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 30, -10), new BABYLON.Vector3(0, -1, 0), Math.PI / 3, 2, scene);
+            stringLight.intensity = 1;
+            stringLight.diffuse = BABYLON.Color3.White();
+            stringLight.specular = BABYLON.Color3.White();
+
+            // Create string light material
+            // var stringLightMaterial = new BABYLON.StandardMaterial("stringLightMaterial", scene);
+            // stringLightMaterial.emissiveColor = BABYLON.Color3.White();
+            // stringLightMaterial.disableLighting = true;
+
+            // Create string light mesh
+            // var stringLightMesh = BABYLON.MeshBuilder.CreateBox("stringLightMesh", { size: 0.1 }, scene);
+            // stringLightMesh.position = stringLight.position;
+            // stringLightMesh.material = stringLightMaterial;
+
+            // Animate the string light
+            // var stringLightAnimationSpeed = 0.01;
+            // scene.registerBeforeRender(function () {
+            //     stringLightMesh.rotation.y += stringLightAnimationSpeed;
+            // });
+
+
+
+
+
+
+            // Create network nodes as spheres
+            var nodes = [];
+            var colors = [BABYLON.Color3.Gray(), BABYLON.Color3.Blue(), BABYLON.Color3.Green(), BABYLON.Color3.Yellow(), BABYLON.Color3.Magenta()];
+            for (var i = 0; i < 5; i++) {
+                var sphere = BABYLON.MeshBuilder.CreateSphere("node" + i, { diameter: 0.5 }, scene);
+                sphere.position = new BABYLON.Vector3(i - 2, 0, 0);
+                sphere.material = new BABYLON.StandardMaterial("mat" + i, scene);
+                // sphere.material.diffuseColor = colors[i];
+                nodes.push(sphere);
+            }
+
+            // Animate the nodes
+            scene.registerBeforeRender(function () {
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    node.rotate(BABYLON.Axis.Y, 0.01, BABYLON.Space.WORLD);
+                }
+            });
+
+            return scene;
+        };
+
+        // Create the scene
+        var scene = createScene();
+
+        // Run the render loop
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        // Handle window resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+
+</html>
