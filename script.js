@@ -1,5 +1,5 @@
 /**
- * Represents a Bitcoin node in the network
+ * Represents a Distributed network
  */
 class BitcoinNode {
     /**
